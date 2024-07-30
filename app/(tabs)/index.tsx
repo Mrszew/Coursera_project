@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, StyleSheet, TextInput,Pressable,View,Image } from 'react-native';
+import { ScrollView, Text, StyleSheet, TextInput,Pressable,View,Image,  useColorScheme, useWindowDimensions } from 'react-native';
 
 export default function LoginScreen() {
   const [email, onChangeEmail] = useState('');
   const [password, onChangePassword] = useState('');
   const [loggedIn,onLogin] = useState(false);
+  const colorScheme = useColorScheme(); //okresla czy dark mode czy light
+  const  {width,height,fontScale} = useWindowDimensions(); //okresla wymiary ekranow
+  // hook comunity przydatne hooki
 
   const handleLogin =() =>{
     onLogin(true);
@@ -12,21 +15,40 @@ export default function LoginScreen() {
   const handleLogout = () => {
     onLogin(false);
   };
- 
   return (
-    <View style={styles.container}>
+    <ScrollView style={[styles.container, colorScheme === "light"  //warunek
+        ? {backgroundColor:"#fff"} // prawda, a na dole falsz
+        : {bacgkgroundColor:"#333333"}]}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Little Lemon</Text>
-        <Image source={require("../../assets/images/favicon.png")}/>
+        <Text style={[styles.headerText, colorScheme ==="light" 
+        ? {color:"#333333"}
+        : {color:"#EDEFEE"}]}>
+        Little Lemon</Text>
+        <Image
+        resizeMode='cover' 
+        style={styles.logo} 
+        accessible={true}
+        accessibilityLabel={'Little Lemon Logo'}
+        source={require("../../assets/images/little.png")}/>
       </View>  
-      <Text style={styles.welcomeText}>Welcome to Little Lemon</Text>
+      <Text style={[styles.welcomeText, colorScheme ==="light"
+        ? {color:"#333333"}
+        : {color:"#EDEFEE"}]}>
+        Welcome to Little Lemon</Text>
       {loggedIn ? (
         <Pressable style={styles.pressButton} onPress={handleLogout}>
-          <Text style={styles.buttonText}> You are logged in!</Text>
+          <Text style={[styles.buttonText, colorScheme ==="light"
+          ? {color:"black"}
+          : {color:"white"}]}> 
+          You are logged in!</Text>
+          <Text>Color Scheme:{colorScheme} </Text>
         </Pressable>
       ) : (
         <>
-          <Text style={styles.regularText}>Login to continue </Text>
+          <Text style={[styles.regularText,colorScheme === "light"
+          ?{color:"black"}
+          :{color:"white"}]}>
+          Login to continue </Text>
           <TextInput
             style={styles.inputBox}
             value={email}
@@ -51,31 +73,32 @@ export default function LoginScreen() {
           </View>  
         </>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"grey",
+    
     
     
   },
   headerText: {
     padding: 40,
     fontSize: 30,
-    color: 'black',
+    color: '#EDEFEE',
     textAlign: 'center',
-    backgroundColor:"yellow",
-    marginBottom:20,
+    
+    marginBottom:1,
+    flex:1
     
   },
   regularText: {
     fontSize: 24,
     padding: 20,
     marginVertical: 8,
-    color: 'black',
+    color: '#EDEFEE',
     textAlign: 'center',
   },
   inputBox: {
@@ -89,7 +112,7 @@ const styles = StyleSheet.create({
 
   },
   welcomeText:{
-    color:"black",
+    color:'#EDEFEE',
     fontSize:40,
     textAlign:'center'
   },
@@ -102,7 +125,7 @@ const styles = StyleSheet.create({
     
   },
   buttonText:{
-    color: 'black', 
+    color: '#EDEFEE',
     fontSize: 20,
     fontFamily: 'Arial',
     textAlign: 'center',
@@ -116,7 +139,16 @@ const styles = StyleSheet.create({
     
   },
   headerContainer:{
-    marginBottom:20
+    marginBottom:1,
+    alignItems: 'center',
+    
+    justifyContent:"center",
+    
+  },
+  logo:{
+    height:100,
+    width:100,
+    borderRadius:20
     
     
     
